@@ -1,5 +1,3 @@
-import './version';
-
 export * from './ActivityItem';
 export * from './Autofill';
 export * from './Announced';
@@ -87,3 +85,5 @@ export * from './Toggle';
 export * from './ToggleButton';
 export * from './Tooltip';
 export * from './Utilities';
+
+import './version';

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+
 import * as ReactTestUtils from 'react-dom/test-utils';
 import { Callout } from './Callout';
 import { CalloutContent } from './CalloutContent';
@@ -136,36 +137,34 @@ describe('Callout', () => {
     // to be rendered into the real dom rather than the testutil simulated dom.
 
     try {
-      ReactTestUtils.act(() => {
-        ReactDOM.render<HTMLDivElement>(
-          <div>
-            <button id="focustarget"> button </button>
-            <button id="target" style={{ top: '10px', left: '10px', height: '0', width: '0px' }}>
-              {' '}
-              target{' '}
-            </button>
-            <Callout target="#target" directionalHint={DirectionalHint.topLeftEdge} onDismiss={onDismiss}>
-              <div>Content</div>
-            </Callout>
-          </div>,
-          realDom,
-        );
-      });
+      ReactDOM.render<HTMLDivElement>(
+        <div>
+          <button id="focustarget"> button </button>
+          <button id="target" style={{ top: '10px', left: '10px', height: '0', width: '0px' }}>
+            {' '}
+            target{' '}
+          </button>
+          <Callout target="#target" directionalHint={DirectionalHint.topLeftEdge} onDismiss={onDismiss}>
+            <div>Content</div>
+          </Callout>
+        </div>,
+        realDom,
+      );
     } catch (e) {
       threwException = true;
     }
     expect(threwException).toEqual(false);
 
+    const focusTarget = document.querySelector('#focustarget') as HTMLButtonElement;
+
+    // Move focus
     ReactTestUtils.act(() => {
-      const focusTarget = document.querySelector('#focustarget') as HTMLButtonElement;
-
-      // Move focus
       jest.runAllTimers();
-
-      focusTarget.focus();
-
-      expect(gotEvent).toEqual(true);
     });
+    ReactTestUtils.act(() => {
+      focusTarget.focus();
+    });
+    expect(gotEvent).toEqual(true);
   });
 
   it('It will correctly return focus to element that spawned it', () => {
@@ -191,29 +190,28 @@ describe('Callout', () => {
     // In order to have eventlisteners that have been added to the window to be called the JSX needs
     // to be rendered into the real dom rather than the testutil simulated dom.
     try {
-      ReactTestUtils.act(() => {
-        ReactDOM.render<HTMLDivElement>(
-          <div>
-            <button id="target" style={{ top: '10px', left: '10px', height: '0', width: '0px' }}>
-              target
-            </button>
-            <Callout target="#target" directionalHint={DirectionalHint.topLeftEdge} onRestoreFocus={onRestoreFocus}>
-              {/* must be a button to be focusable for the test*/}
-              <button id={'inner'}>Content</button>
-            </Callout>
-          </div>,
-          realDom,
-        );
-      });
+      ReactDOM.render<HTMLDivElement>(
+        <div>
+          <button id="target" style={{ top: '10px', left: '10px', height: '0', width: '0px' }}>
+            target
+          </button>
+          <Callout target="#target" directionalHint={DirectionalHint.topLeftEdge} onRestoreFocus={onRestoreFocus}>
+            {/* must be a button to be focusable for the test*/}
+            <button id={'inner'}>Content</button>
+          </Callout>
+        </div>,
+        realDom,
+      );
     } catch (e) {
       threwException = true;
     }
     expect(threwException).toEqual(false);
+    const focusTarget = document.querySelector('#inner') as HTMLDivElement;
 
     ReactTestUtils.act(() => {
-      const focusTarget = document.querySelector('#inner') as HTMLDivElement;
-
       jest.runAllTimers();
+    });
+    ReactTestUtils.act(() => {
       // Make sure that focus is in the callout
       focusTarget.focus();
     });

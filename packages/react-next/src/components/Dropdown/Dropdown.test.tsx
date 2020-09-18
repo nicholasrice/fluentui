@@ -337,16 +337,10 @@ describe('Dropdown', () => {
 
       const container = document.createElement('div');
       document.body.appendChild(container);
-
-      ReactTestUtils.act(() => {
-        ReactDOM.render(<Dropdown componentRef={dropdown} label="testgroup" options={DEFAULT_OPTIONS} />, container);
-      });
+      ReactDOM.render(<Dropdown componentRef={dropdown} label="testgroup" options={DEFAULT_OPTIONS} />, container);
 
       expect(document.body.querySelector('.ms-Dropdown-item')).toBeNull();
-
-      ReactTestUtils.act(() => {
-        dropdown.current!.focus(true);
-      });
+      dropdown.current!.focus(true);
       const firstDropdownItem = document.body.querySelector('.ms-Dropdown-item');
       expect(firstDropdownItem).not.toBeNull();
       expect(firstDropdownItem!.getAttribute('aria-selected')).toBe('true');
